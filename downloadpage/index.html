@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Yuyarie 分享的小文件与实用工具。">
+  <title>下载站 · Yuyarie</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f5f1; color: #252b27; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.8; }
+    main { width: min(100% - 48px, 780px); margin: 0 auto; padding: 64px 0 40px; }
+    a { color: #315b43; text-underline-offset: 5px; }
+    a:focus-visible { outline: 3px solid #819d68; outline-offset: 5px; }
+    .label { margin-top: 48px; color: #587460; font-size: 13px; letter-spacing: .16em; }
+    h1 { margin: 20px 0; font-size: clamp(40px, 8vw, 64px); line-height: 1.15; letter-spacing: -.04em; }
+    .intro, .meta { color: #626961; }
+    .intro { font-size: 19px; }
+    ul { padding: 0; margin: 40px 0 0; list-style: none; }
+    li { display: flex; align-items: center; gap: 24px; justify-content: space-between; padding: 24px 0; border-top: 1px solid #d9ddd4; }
+    .details { min-width: 0; }
+    .name { margin: 0; font-size: 17px; overflow-wrap: anywhere; }
+    .meta { margin: 4px 0 0; font-size: 13px; }
+    .download { flex-shrink: 0; padding: 7px 20px; border: 1px solid #315b43; border-radius: 30px; text-decoration: none; }
+    .download:hover { background: #315b43; color: white; }
+    #status { margin-top: 40px; padding: 28px 0; border-top: 1px solid #d9ddd4; color: #626961; }
+    footer { margin-top: 80px; color: #747b72; font-size: 13px; }
+    [hidden] { display: none; }
+    @media (max-width: 480px) { main { padding-top: 32px; } li { gap: 12px; } .download { padding: 6px 14px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a href="../">← 返回主页</a>
+    <div class="label">YUYARIE / DOWNLOADS</div>
+    <h1>下载站</h1>
+    <p class="intro">一些零碎小文件，一些顺手的小工具。<br>希望这里有你用得上的东西。</p>
+    <p id="status" role="status">正在加载文件列表…</p>
+    <ul id="files" aria-label="可下载的文件"></ul>
+    <noscript><p>请启用 JavaScript 以查看下载列表。</p></noscript>
+    <footer>© Yuyarie · 分享让小工具发挥更多用处。</footer>
+  </main>
+  <script>
+    const status = document.getElementById('status');
+    const list = document.getElementById('files');
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+    fetch('./files.json')
+      .then(response => {
+        if (!response.ok) throw new Error('无法加载文件列表');
+        return response.json();
+      })
+      .then(files => {
+        status.hidden = files.length > 0;
+        status.textContent = '暂时还没有文件，过段时间再来看看吧。';
+        for (const file of files) {
+          const item = document.createElement('li');
+          const details = document.createElement('div');
+          details.className = 'details';
+          const name = document.createElement('h2');
+          name.className = 'name';
+          name.textContent = file.name;
+          const meta = document.createElement('p');
+          meta.className = 'meta';
+          meta.textContent = formatSize(file.size);
+          const link = document.createElement('a');
+          link.className = 'download';
+          link.href = '../downloads/' + encodeURIComponent(file.name);
+          link.download = file.name;
+          link.textContent = '下载 ↓';
+          link.setAttribute('aria-label', '下载 ' + file.name);
+          details.append(name, meta);
+          item.append(details, link);
+          list.append(item);
+        }
+      })
+      .catch(() => {
+        status.textContent = '文件列表暂时无法加载，请稍后刷新重试。';
+      });
+  </script>
+</body>
+</html>
