@@ -35,4 +35,8 @@ python -m http.server 8000
 
 首次使用时，在仓库 **Settings → Pages → Build and deployment → Source** 中选择 **GitHub Actions**。
 
-提交并推送到 `main` 后，工作流会自动扫描 `downloads/`、生成列表并发布网站，无需手动维护文件链接。仅首页、`downloadpage/` 和 `downloads/` 会发布。`downloadpage/files.json` 本地生成的变化可随文件一起提交，发布时也会重新生成。
+提交并推送到 `main` 后，工作流会自动扫描 `downloads/`、生成列表并发布网站，无需手动维护文件链接。首页、`favicon.ico`、`favicon.png`、`apple-touch-icon.png`、`downloadpage/` 和 `downloads/` 会发布。`downloadpage/files.json` 本地生成的变化可随文件一起提交，发布时也会重新生成。
+
+## 网站图标
+
+网站图标由用户提供的图片裁剪生成，首页和下载页共用。根目录的 `favicon.ico` 和 `favicon.png` 用于浏览器标签页，`apple-touch-icon.png` 用于 Apple 设备添加到主屏幕。更换图片时请同步更新这三个文件；发布后若仍显示旧图标，可以刷新页面或用无痕窗口查看。

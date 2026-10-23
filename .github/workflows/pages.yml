@@ -29,7 +29,7 @@ jobs:
         run: |
           python scripts/build_downloads.py
           mkdir _site
-          cp index.html .nojekyll _site/
+          cp index.html favicon.ico favicon.png apple-touch-icon.png .nojekyll _site/
           cp -r downloads _site/downloads
           cp -r downloadpage _site/downloadpage
       - uses: actions/configure-pages@v5
